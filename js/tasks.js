@@ -48,8 +48,16 @@
         // All done message
         if (done === total && total > 0) {
             completeMsg.style.display = 'block';
+
+            // Only notify if we just completed the last task (prevent repeated notifications on re-render)
+            const previouslyDone = completeMsg.dataset.notified === 'true';
+            if (!previouslyDone) {
+                window.FocusFlow.notify('All Tasks Completed!', 'You crushed today\'s goals 🔥 Amazing work!');
+                completeMsg.dataset.notified = 'true';
+            }
         } else {
             completeMsg.style.display = 'none';
+            completeMsg.dataset.notified = 'false';
         }
 
         // Render tasks

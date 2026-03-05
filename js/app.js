@@ -183,6 +183,48 @@
         draw();
     };
 
+    // ---- Browser Notifications ----
+    if ('Notification' in window && Notification.permission === 'default') {
+        Notification.requestPermission();
+    }
+
+    window.FocusFlow.notify = function (title, body) {
+        // In-app toast
+        showToast(title, body);
+
+        // OS-level notification
+        if ('Notification' in window && Notification.permission === 'granted') {
+            try {
+                new Notification(title, {
+                    body: body,
+                    icon: 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><text y="80" font-size="80">⏱️</text></svg>',
+                    badge: 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><text y="80" font-size="80">⏱️</text></svg>',
+                    silent: false
+                });
+            } catch (e) { /* Notification not supported in this context */ }
+        }
+    };
+
+    // ---- In-App Toast Notification ----
+    function showToast(title, body) {
+        const existing = document.getElementById('ff-toast');
+        if (existing) existing.remove();
+
+        const toast = document.createElement('div');
+        toast.id = 'ff-toast';
+        toast.innerHTML = `
+            <div class="toast-content">
+                <strong>${title}</strong>
+                <p>${body}</p>
+            </div>
+            <button class="toast-close" onclick="this.parentElement.remove()">✕</button>
+        `;
+        document.body.appendChild(toast);
+
+        // Auto-remove after 5 seconds
+        setTimeout(() => { if (toast.parentElement) toast.remove(); }, 5000);
+    }
+
     // ---- Expose navigateTo globally ----
     window.FocusFlow.navigateTo = navigateTo;
 

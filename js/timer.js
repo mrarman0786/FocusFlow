@@ -175,6 +175,8 @@
             statusEl.className = 'timer-status break';
             statusText.textContent = 'Break time!';
             if (progressCircle) progressCircle.style.stroke = 'var(--accent)';
+
+            window.FocusFlow.notify('Focus Complete!', `Great job! You focused for ${focusMin} minutes. Time for a break.`);
         } else {
             // Break ended -> back to focus
             isBreak = false;
@@ -183,6 +185,8 @@
             statusEl.className = 'timer-status';
             statusText.textContent = 'Ready to focus';
             if (progressCircle) progressCircle.style.stroke = 'var(--primary)';
+
+            window.FocusFlow.notify('Break Complete!', 'Ready to jump back in? Let\'s go!');
         }
 
         startText.textContent = 'Start';
